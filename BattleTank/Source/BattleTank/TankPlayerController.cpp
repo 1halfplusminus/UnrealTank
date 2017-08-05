@@ -38,14 +38,14 @@ void ATankPlayerController::AimTowardsCrosshair()
 	if (!GetControlledTank()) { return; }
 
 	FVector HitLocation; //Out parameter
+	 // Get world location of linetrace through crosshair
+	 // If it hits the landscape
 	if(GetSightRayHitLocation(HitLocation))
 	{
-		
+		// Tell controlled tank to aim at this point
+		UE_LOG(LogTemp, Warning, TEXT("HIT LOCATION: %s"), *HitLocation.ToString());
 	}
 	DrawReachDebugLine();
-	// Get world location of linetrace through crosshair
-	// If it hits the landscape
-		// Telle controlled tank to aim at this point
 }
 
 // Get world location of linetrace through crosshair, true if hits landscape
@@ -56,21 +56,9 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 	{
 		return false;
 	}
-	// Find the crosshair position
-	int32 ViewportSizeX, ViewPortSizeY;
-	GetViewportSize(ViewportSizeX, ViewPortSizeY);
-	FVector2D ScreenLocation(CrossHairXlocation * ViewportSizeX, CrossHairYLocation * ViewPortSizeY);
-	// "De-project" the screen position of the crosshair to a world direction
 	// Line trace along that look direction and see what we hit (up to max range)
-	FVector StartLocation;
-	FRotator ActorRotation;
 	FHitResult HitResult;
-	ControlledTank->GetActorEyesViewPoint(StartLocation, ActorRotation);
-	if (GetWorld()->LineTraceSingleByObjectType(
-		HitResult,
-		StartLocation,
-		StartLocation + RotationInput.Vector() * 1000,
-		FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldStatic)))
+	if (GetLookVectorHit(HitResult))
 	{
 		HitLocation = HitResult.Location;
 		return true;
@@ -81,7 +69,16 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 	
 }
 
-void ATankPlayerController::DrawReachDebugLine()
+bool ATankPlayerController::GetLookVectorHit(FHitResult &HitResult) const
+{
+	return GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		GetReachLineStart(),
+		GetReachLineEnd(),
+		ECC_Visibility);
+}
+
+void ATankPlayerController::DrawReachDebugLine() const
 {
 	DrawDebugLine(
 		GetWorld(),
@@ -95,19 +92,27 @@ void ATankPlayerController::DrawReachDebugLine()
 	);
 }
 
-FVector ATankPlayerController::GetReachLineEnd()
+bool ATankPlayerController::GetCrossHairWorldDirection(FVector &LookDirection) const
 {
-	FVector Location;
-	FRotator Rotation;
-	FRotator SpringArmRotation;
-	ATank*   Tank = GetControlledTank();
-	USceneComponent* AzimuteGimble = Tank->FindComponentByClass<USceneComponent>();
+	int32 ViewportSizeX, ViewPortSizeY;
+	GetViewportSize(ViewportSizeX, ViewPortSizeY);
+	FVector2D ScreenLocation(CrossHairXlocation * ViewportSizeX, CrossHairYLocation * ViewPortSizeY);
+	FVector WorldLocation; //discard
+	return DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, WorldLocation, LookDirection);
 
-	FVector LineTraceEnd = GetControlledTank()->GetActorLocation() + AzimuteGimble->GetComponentRotation().Vector()  * 100000000;
+}
+
+FVector ATankPlayerController::GetReachLineEnd() const
+{
+
+	
+	FVector LookDirection;
+	GetCrossHairWorldDirection(LookDirection);
+	FVector LineTraceEnd = GetReachLineStart() + LookDirection  * LineTraceRange;
 	return LineTraceEnd;
 }
 
-FVector ATankPlayerController::GetReachLineStart()
+FVector ATankPlayerController::GetReachLineStart() const
 {
-	return GetControlledTank()->GetActorLocation();
+	return PlayerCameraManager->GetCameraLocation();
 }

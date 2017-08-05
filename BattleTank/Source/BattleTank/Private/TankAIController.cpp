@@ -24,13 +24,21 @@ bool ATankAIController::IsThereAPlayer() const
 }
 void ATankAIController::BeginPlay()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AI BEGIN PLAY"));
-	auto PlayerTank = GetPlayerTank();
-	if (PlayerTank)
+	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("TANK AI BEGIN PLAY"));
+	ATank* ControlledTank = GetControlledTank();
+	if (ControlledTank)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AIMING AT: %s"), *PlayerTank->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("A AI ARE CONTROLLING: %s"), *ControlledTank->GetName());
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("CAN'T FIND THE TARGET"));
+		UE_LOG(LogTemp, Warning, TEXT("AN AI IS BUGGING"));
 	}
+}
+void ATankAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (!IsThereAPlayer() || !GetControlledTank()) { return; }
+	auto PlayerTank = GetPlayerTank();
+	GetControlledTank()->AimAt(PlayerTank->GetActorLocation());
 }

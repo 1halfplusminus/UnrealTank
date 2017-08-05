@@ -40,7 +40,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 	FVector HitLocation; //Out parameter
 	if(GetSightRayHitLocation(HitLocation))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString());
+		
 	}
 	DrawReachDebugLine();
 	// Get world location of linetrace through crosshair
@@ -56,6 +56,12 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 	{
 		return false;
 	}
+	// Find the crosshair position
+	int32 ViewportSizeX, ViewPortSizeY;
+	GetViewportSize(ViewportSizeX, ViewPortSizeY);
+	FVector2D ScreenLocation(CrossHairXlocation * ViewportSizeX, CrossHairYLocation * ViewPortSizeY);
+	// "De-project" the screen position of the crosshair to a world direction
+	// Line trace along that look direction and see what we hit (up to max range)
 	FVector StartLocation;
 	FRotator ActorRotation;
 	FHitResult HitResult;
@@ -97,7 +103,7 @@ FVector ATankPlayerController::GetReachLineEnd()
 	ATank*   Tank = GetControlledTank();
 	USceneComponent* AzimuteGimble = Tank->FindComponentByClass<USceneComponent>();
 
-	FVector LineTraceEnd = GetControlledTank()->GetActorLocation() + Rotation.Vector()  * 100000000;
+	FVector LineTraceEnd = GetControlledTank()->GetActorLocation() + AzimuteGimble->GetComponentRotation().Vector()  * 100000000;
 	return LineTraceEnd;
 }
 

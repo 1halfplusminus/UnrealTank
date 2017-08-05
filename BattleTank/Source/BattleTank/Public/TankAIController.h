@@ -17,7 +17,9 @@ class BATTLETANK_API ATankAIController : public AAIController
 	GENERATED_BODY()
 protected:
 	virtual void BeginPlay() override;
-public:
+private:
 	ATank* GetControlledTank() const;	
 
+	ATank* GetPlayerTank() const;
+	bool IsThereAPlayer() const;
 };

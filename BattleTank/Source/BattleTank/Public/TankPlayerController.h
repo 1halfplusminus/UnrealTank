@@ -21,22 +21,20 @@ protected:
 private:
 
 	UPROPERTY(EditAnywhere)
-	float CrossHairXlocation = 0.5f;
+	float CrosshairXLocation = 0.5f;
 	UPROPERTY(EditAnywhere)
-	float CrossHairYLocation = 0.33333f;
+	float CrosshairYLocation = 0.33333f;
 	UPROPERTY(EditAnywhere)
 	float LineTraceRange = 100000.0f;
 
 	// Find the crosshair position
 	// "De-project" the screen position of the crosshair to a world direction
-	bool GetCrossHairWorldDirection(FVector&) const;
-	FVector GetReachLineEnd() const;
-	FVector GetReachLineStart() const;
+	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
+	bool GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const;
 	ATank* GetControlledTank() const;
 	bool GetSightRayHitLocation(FVector&) const;
 
 	bool GetLookVectorHit(FHitResult&) const;
-	void DrawReachDebugLine() const;
 	// Start the tank moving the barrel so that a shot would hit where 
 	// the crosshair intersects the world
 	void   AimTowardsCrosshair();

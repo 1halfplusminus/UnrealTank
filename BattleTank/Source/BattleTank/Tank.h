@@ -7,6 +7,8 @@
 #include "TankAimingComponent.h"
 #include "Tank.generated.h"
 
+class UTankBarrel; //Forward declaration
+
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -18,7 +20,7 @@ public:
 	void AimAt(FVector WorldSpaceAim) const;
 
 	UFUNCTION(BlueprintCallable,Category = Setup)
-	void SetBarrelReference(UStaticMeshComponent* BarrelToSet) const;
+	void SetBarrelReference(UTankBarrel* BarrelToSet) const;
 protected:
 	UTankAimingComponent* TankAimingComponent = nullptr;
 private:

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Tank.h"
-
+#include "TankBarrel.h"
 
 // Sets default values
 ATank::ATank()
@@ -40,7 +40,7 @@ void ATank::AimAt(FVector WorldSpaceAim) const
 	TankAimingComponent->AimAt(WorldSpaceAim,LaunchSpeed);
 }
 
-void ATank::SetBarrelReference(UStaticMeshComponent * BarrelToSet) const
+void ATank::SetBarrelReference(UTankBarrel * BarrelToSet) const
 {
 	TankAimingComponent->SetBarrelReference(BarrelToSet);
 }

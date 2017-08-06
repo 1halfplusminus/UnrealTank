@@ -26,17 +26,15 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim,float LaunchSpeed)
 	FVector OutLaunchVelocity;
 	auto StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	//Calculate out
-	if(UGameplayStatics::SuggestProjectileVelocity(
+	auto bCanAimAtWorldSpaceAim = UGameplayStatics::SuggestProjectileVelocity(
 		this,
 		OutLaunchVelocity,
 		StartLocation,
 		WorldSpaceAim,
 		LaunchSpeed,
-		false,
-		0,
-		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
-	))
+	);
+	if(bCanAimAtWorldSpaceAim)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		auto TankName = GetOwner()->GetName();
@@ -54,6 +52,17 @@ void UTankAimingComponent::BeginPlay()
 	
 }
 
+
+void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
+{
+	// Work-out difference between current barrel rotation , and AimDirection
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	// Move the barrel the right amount this frame
+
+	// Given a max elevation speed, and the frame time
+}
 
 // Called every frame
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

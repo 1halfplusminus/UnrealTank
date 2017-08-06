@@ -4,7 +4,7 @@
 #include "TankAIController.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
-
+#include "Tank.h"
 
 ATank* ATankAIController::GetControlledTank() const
 {
@@ -26,7 +26,7 @@ void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("TANK AI BEGIN PLAY"));
-	ATank* ControlledTank = GetControlledTank();
+	auto ControlledTank = GetControlledTank();
 	if (ControlledTank)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("A AI ARE CONTROLLING: %s"), *ControlledTank->GetName());

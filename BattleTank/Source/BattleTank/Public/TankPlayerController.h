@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
-#include "Tank.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
+//Forward Declarations
+class ATank;
 /**
 *
 */
@@ -25,7 +25,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float CrossHairYLocation = 0.33333f;
 	UPROPERTY(EditAnywhere)
-	float LineTraceRange = 1000000.0f;
+	float LineTraceRange = 100000.0f;
 
 	// Find the crosshair position
 	// "De-project" the screen position of the crosshair to a world direction

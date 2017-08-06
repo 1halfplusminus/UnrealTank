@@ -35,12 +35,12 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 
-void ATank::AimAt(FVector WorldSpaceAim)
+void ATank::AimAt(FVector WorldSpaceAim) const
 {
-	TankAimingComponent->AimAt(WorldSpaceAim);
+	TankAimingComponent->AimAt(WorldSpaceAim,LaunchSpeed);
 }
 
-void ATank::SetBarrelReference(UStaticMeshComponent * BarrelToSet)
+void ATank::SetBarrelReference(UStaticMeshComponent * BarrelToSet) const
 {
 	TankAimingComponent->SetBarrelReference(BarrelToSet);
 }

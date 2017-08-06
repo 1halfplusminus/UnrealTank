@@ -15,10 +15,10 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
-	void AimAt(FVector WorldSpaceAim);
+	void AimAt(FVector WorldSpaceAim) const;
 
 	UFUNCTION(BlueprintCallable,Category = Setup)
-	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
+	void SetBarrelReference(UStaticMeshComponent* BarrelToSet) const;
 protected:
 	UTankAimingComponent* TankAimingComponent = nullptr;
 private:

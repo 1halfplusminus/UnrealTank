@@ -33,6 +33,11 @@ void ATank::AimAt(FVector WorldSpaceAim) const
 	TankAimingComponent->AimAt(WorldSpaceAim,LaunchSpeed);
 }
 
+void ATank::Fire()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Fire and ready to fuck"));
+}
+
 void ATank::SetBarrelReference(UTankBarrel * BarrelToSet) const
 {
 	TankAimingComponent->SetBarrelReference(BarrelToSet);

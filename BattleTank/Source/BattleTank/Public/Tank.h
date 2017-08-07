@@ -20,6 +20,8 @@ public:
 	ATank();
 
 	void AimAt(FVector WorldSpaceAim) const;
+	UFUNCTION(BlueprintCallable)
+	void Fire();
 
 	UFUNCTION(BlueprintCallable,Category = Setup)
 	void SetBarrelReference(UTankBarrel* BarrelToSet) const;

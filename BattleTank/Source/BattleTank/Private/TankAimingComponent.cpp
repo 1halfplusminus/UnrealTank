@@ -49,8 +49,8 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim,float LaunchSpeed)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		auto TankName = GetOwner()->GetName();
-		UE_LOG(LogTemp, Warning, TEXT("%f %s Aiming at %s"), GetWorld()->GetTimeSeconds(), *TankName,*AimDirection.ToString());
 		MoveBarrelTowards(AimDirection);
+		UE_LOG(LogTemp, Warning, TEXT("%f %s Aiming at %s"), GetWorld()->GetTimeSeconds(), *TankName, *AimDirection.ToString());
 	}
 	else
 	{
@@ -79,8 +79,13 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	// Move the barrel the right amount this frame
 	// Given a max elevation speed, and the frame time
 	Barrel->Elevate(DeltaRotator.Pitch);
-	Turret->Rotate(DeltaRotator.Yaw);
-
+	if (FMath::Abs(DeltaRotator.Yaw) < 100)
+	{
+		Turret->Rotate(DeltaRotator.Yaw);
+	}
+	else {
+		Turret->Rotate(-DeltaRotator.Yaw);
+	}
 }
 
 // Called every frame

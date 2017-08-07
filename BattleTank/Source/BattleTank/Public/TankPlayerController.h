@@ -25,7 +25,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float CrosshairYLocation = 0.33333f;
 	UPROPERTY(EditAnywhere)
-	float LineTraceRange = 100000.0f;
+	float LineTraceRange = 10000000.0f;
 
 	// Find the crosshair position
 	// "De-project" the screen position of the crosshair to a world direction

@@ -37,9 +37,13 @@ void ATank::AimAt(FVector WorldSpaceAim) const
 void ATank::Fire()
 {
 	if (!Barrel) { return; }
-	UE_LOG(LogTemp, Warning, TEXT("Fire and ready to fuck"));
+
 	//Spaw a projectile at the socket location in barrel
-	GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
+	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
+	if (Projectile)
+	{
+		Projectile->Launch(LaunchSpeed);
+	}
 }
 
 void ATank::SetBarrelReference(UTankBarrel * BarrelToSet) 

@@ -30,6 +30,5 @@ void AProjectile::Launch(float Speed)
 {
 	ProjectileMovementComponent->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	ProjectileMovementComponent->Activate();
-	UE_LOG(LogTemp, Warning, TEXT("Fire and ready to fuck"));
 }
 

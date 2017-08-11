@@ -2,6 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
@@ -10,15 +11,14 @@
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("PLAYER CONTROLLER BEGIN PLAY"));
-	ATank* ControlledTank = GetControlledTank();
-	if (ControlledTank)
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (AimingComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("YOUR ARE CONTROLLING: %s"),*ControlledTank->GetName());
+		FoundAimingComponent(AimingComponent);
 	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("MOUAHAHAHAHAH"));
+	else 
+	{
+		UE_LOG(LogTemp, Warning,TEXT("Player controller can't find Aiming Component"))
 	}
 }
 
@@ -32,18 +32,21 @@ ATank* ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
 }
-
-
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!GetControlledTank()) { return; }
-
+	auto ControlledTank = GetControlledTank();
+	if (!ControlledTank) { return; }
 	FVector HitLocation; //Out parameter
 	 // Get world location of linetrace through crosshair
 	 // If it hits the landscape
 	if (GetSightRayHitLocation(HitLocation)) {
 		// Tell controlled tank to aim at this point
-		GetControlledTank()->AimAt(HitLocation);
+		auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
+		if (AimingComponent)
+		{
+			AimingComponent->AimAt(HitLocation);
+		}
+		
 	}
 }
 

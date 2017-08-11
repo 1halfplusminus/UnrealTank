@@ -36,7 +36,6 @@ protected:
 	UTankTurret* Turret = nullptr;
 
 	void MoveBarrelTowards(FVector AimDirection);
-
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 4000.0f;
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
@@ -44,7 +43,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<AProjectile> ProjectileBlueprint; // alternative
 	double LastFireTime = 0.0f;
-	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringStatus FiringState = EFiringStatus::Reloading;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	EFiringStatus FiringState = EFiringStatus::Locked;
+private:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	bool IsReloading() const;
 };

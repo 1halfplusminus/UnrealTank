@@ -12,13 +12,9 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
-	if (AimingComponent)
+	if (ensure(AimingComponent))
 	{
 		FoundAimingComponent(AimingComponent);
-	}
-	else 
-	{
-		UE_LOG(LogTemp, Warning,TEXT("Player controller can't find Aiming Component"))
 	}
 }
 
@@ -35,7 +31,7 @@ ATank* ATankPlayerController::GetControlledTank() const
 void ATankPlayerController::AimTowardsCrosshair()
 {
 	auto ControlledTank = GetControlledTank();
-	if (!ControlledTank) { return; }
+	if (!ensure(ControlledTank)) { return; }
 	FVector HitLocation; //Out parameter
 	 // Get world location of linetrace through crosshair
 	 // If it hits the landscape

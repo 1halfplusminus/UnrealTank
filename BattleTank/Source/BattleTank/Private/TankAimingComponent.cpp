@@ -13,7 +13,6 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	// ...
 }
 
 void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
@@ -33,13 +32,9 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 		FiringState = EFiringStatus::Reloading;
 	}
 }
-bool UTankAimingComponent::IsReloading() const
-{
-	return false;
-}
 void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
 {
-	if (!Barrel || !Turret) { return;  } // TODO Refractor
+	if (!ensure(Barrel) || !ensure(Turret)) { return;  } // TODO Refractor
 
 	FVector OutLaunchVelocity;
 	auto StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
@@ -66,7 +61,7 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-	if (!Barrel || !Turret) { return; }
+	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 	// Work-out difference between current barrel rotation , and AimDirection
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
@@ -86,7 +81,8 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 void UTankAimingComponent::Fire()
 {
 	auto Barrel = GetOwner()->FindComponentByClass<UTankBarrel>();
-	if (Barrel && FiringState == EFiringStatus::Aiming) {
+	if (!ensure(Barrel)) { return; }
+	if (FiringState == EFiringStatus::Aiming) {
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
 		if (Projectile)
 		{

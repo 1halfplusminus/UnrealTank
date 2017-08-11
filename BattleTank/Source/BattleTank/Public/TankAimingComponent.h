@@ -43,9 +43,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<AProjectile> ProjectileBlueprint; // alternative
 	double LastFireTime = 0.0f;
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	EFiringStatus FiringState = EFiringStatus::Locked;
+	UPROPERTY(BlueprintReadOnly)
+	EFiringStatus FiringState = EFiringStatus::Reloading;
 private:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-	bool IsReloading() const;
 };

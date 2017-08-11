@@ -7,14 +7,16 @@
 #include "Tank.generated.h"
 
 //Forward declaration
-class UTankBarrel; 
+class UTankBarrel;
 class UTankAimingComponent;
 class UTankTurret;
 class AProjectile;
-UCLASS()
+
+UCLASS() 
 class BATTLETANK_API ATank : public APawn
 {
 	GENERATED_BODY()
+
 public:
 	// Sets default values for this pawn's properties
 	ATank();
@@ -34,12 +36,14 @@ private:
 	virtual void BeginPlay() override;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 4000.0f;
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<AProjectile> ProjectileBlueprint; // alternative
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float ReloadTimeInSeconds = 3;
-	UTankBarrel* Barrel = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AProjectile> ProjectileBlueprint; // alternative
+
 	double LastFireTime = 0;
+	UTankBarrel* Barrel = nullptr;
 };

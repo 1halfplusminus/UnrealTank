@@ -19,6 +19,7 @@ class UTankBarrel;
 class UTankTurret;
 class AProjectile;
 
+// Responsible of balistic calculation
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
@@ -32,6 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Setup")
 	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 protected:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 
@@ -42,9 +45,7 @@ protected:
 	float ReloadTimeInSeconds = 3.0f;
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<AProjectile> ProjectileBlueprint; // alternative
-	double LastFireTime = 0.0f;
+	float LastFireTime = 0.0f;
 	UPROPERTY(BlueprintReadOnly)
 	EFiringStatus FiringState = EFiringStatus::Reloading;
-private:
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 };

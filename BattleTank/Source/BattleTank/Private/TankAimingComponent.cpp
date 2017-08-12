@@ -23,7 +23,8 @@ void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	bool CanShoot = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	bool CanShoot = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTimeInSeconds;
 	if (CanShoot)
 	{
 		FiringState = EFiringStatus::Aiming;
@@ -80,14 +81,14 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 void UTankAimingComponent::Fire()
 {
-	auto Barrel = GetOwner()->FindComponentByClass<UTankBarrel>();
-	if (!ensure(Barrel)) { return; }
 	if (FiringState == EFiringStatus::Aiming) {
+		auto Barrel = GetOwner()->FindComponentByClass<UTankBarrel>();
+		if (!ensure(Barrel) || !ensure(ProjectileBlueprint)) { return; }
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
 		if (Projectile)
 		{
 			Projectile->Launch(LaunchSpeed);
-			LastFireTime = FPlatformTime::Seconds();
+			LastFireTime = GetWorld()->GetTimeSeconds();
 		}
 	}
 }

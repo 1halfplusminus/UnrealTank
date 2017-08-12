@@ -48,4 +48,8 @@ protected:
 	float LastFireTime = 0.0f;
 	UPROPERTY(BlueprintReadOnly)
 	EFiringStatus FiringState = EFiringStatus::Reloading;
+
+	FVector AimDirection = FVector(0);
+private:
+	bool IsBarrelMoving();
 };

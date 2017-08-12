@@ -20,17 +20,25 @@ void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* Tur
 	Barrel = BarrelToSet;
 	Turret = TurretToSet;
 }
-
+bool UTankAimingComponent::IsBarrelMoving()
+{
+	if (!ensure(Barrel)) { return false; }
+	auto BarrelForward = Barrel->GetForwardVector();
+	return !BarrelForward.Equals(AimDirection,0.01);
+}
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	bool CanShoot = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTimeInSeconds;
-	if (CanShoot)
+	if (!CanShoot)
 	{
+		FiringState = EFiringStatus::Reloading;
+	}
+	else if(IsBarrelMoving()) {
 		FiringState = EFiringStatus::Aiming;
 	}
 	else {
-		FiringState = EFiringStatus::Reloading;
+		FiringState = EFiringStatus::Locked;
 	}
 }
 void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
@@ -54,8 +62,7 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
 	);
 	if(bCanAimAtWorldSpaceAim)
 	{
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		auto TankName = GetOwner()->GetName();
+		AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 	}
 }
@@ -81,7 +88,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 void UTankAimingComponent::Fire()
 {
-	if (FiringState == EFiringStatus::Aiming) {
+	if (FiringState == EFiringStatus::Aiming || FiringState == EFiringStatus::Locked) {
 		auto Barrel = GetOwner()->FindComponentByClass<UTankBarrel>();
 		if (!ensure(Barrel) || !ensure(ProjectileBlueprint)) { return; }
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));

@@ -77,7 +77,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	// Move the barrel the right amount this frame
 	// Given a max elevation speed, and the frame time
 	Barrel->Elevate(DeltaRotator.Pitch);
-	if (FMath::Abs(DeltaRotator.Yaw) < 100)
+	if (DeltaRotator.Yaw < 100)
 	{
 		Turret->Rotate(DeltaRotator.Yaw);
 	}

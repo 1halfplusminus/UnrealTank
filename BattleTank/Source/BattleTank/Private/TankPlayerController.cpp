@@ -1,11 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
-#include "Tank.h"
 #include "TankAimingComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
-#include "DrawDebugHelpers.h"
 #include "Components/SceneComponent.h"
 
 void ATankPlayerController::BeginPlay()
@@ -23,14 +21,9 @@ void ATankPlayerController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
 }
-
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	auto ControlledTank = GetControlledTank();
+	auto ControlledTank = GetPawn();
 	if (!ensure(ControlledTank)) { return; }
 	FVector HitLocation; //Out parameter
 	 // Get world location of linetrace through crosshair

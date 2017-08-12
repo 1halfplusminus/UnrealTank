@@ -5,7 +5,6 @@
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "TankAimingComponent.h"
-#include "Tank.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -14,8 +13,8 @@ void ATankAIController::BeginPlay()
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	auto PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	auto ControlledTank = Cast<ATank>(GetPawn());
+	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+	auto ControlledTank = GetPawn();
 
 	if (PlayerTank && ControlledTank) { 
 		MoveToActor(PlayerTank, AcceptanceRadius);

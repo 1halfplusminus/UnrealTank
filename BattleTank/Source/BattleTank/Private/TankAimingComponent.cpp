@@ -49,7 +49,7 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
 	auto StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	//Calculate out
 	auto bCanAimAtWorldSpaceAim = UGameplayStatics::BlueprintSuggestProjectileVelocity(
-		GetWorld(),
+		this,
 		OutLaunchVelocity,
 		StartLocation,
 		WorldSpaceAim,

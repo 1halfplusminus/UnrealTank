@@ -32,6 +32,8 @@ public:
 	void Fire();
 	UFUNCTION(BlueprintCallable,Category="Setup")
 	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+
+	EFiringStatus GetFiringState() const;
 protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 

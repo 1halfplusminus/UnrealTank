@@ -12,7 +12,8 @@ enum class EFiringStatus : uint8
 {
 	Reloading,
 	Locked,
-	Aiming
+	Aiming,
+	OutOfAmmo
 };
 // Forward Declaration
 class UTankBarrel; 
@@ -34,6 +35,7 @@ public:
 	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
 	EFiringStatus GetFiringState() const;
+	int	GetNumberOfAmmo() const;
 protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
@@ -50,6 +52,8 @@ protected:
 	float LastFireTime = 0.0f;
 	UPROPERTY(BlueprintReadOnly)
 	EFiringStatus FiringState = EFiringStatus::Reloading;
+	UPROPERTY(BlueprintReadOnly)
+	int NumberOfAmmo = 3;
 
 	FVector AimDirection = FVector(0);
 private:

@@ -24,6 +24,10 @@ EFiringStatus UTankAimingComponent::GetFiringState() const
 {
 	return FiringState;
 }
+int	 UTankAimingComponent::GetNumberOfAmmo() const
+{
+	return NumberOfAmmo;
+}
 bool UTankAimingComponent::IsBarrelMoving()
 {
 	if (!ensure(Barrel)) { return false; }
@@ -34,7 +38,11 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	bool CanShoot = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTimeInSeconds;
-	if (!CanShoot)
+	if (NumberOfAmmo <= 0)
+	{
+		FiringState = EFiringStatus::OutOfAmmo;
+	}
+	else if(!CanShoot)
 	{
 		FiringState = EFiringStatus::Reloading;
 	}
@@ -100,6 +108,7 @@ void UTankAimingComponent::Fire()
 		{
 			Projectile->Launch(LaunchSpeed);
 			LastFireTime = GetWorld()->GetTimeSeconds();
+			NumberOfAmmo--;
 		}
 	}
 }

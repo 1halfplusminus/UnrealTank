@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "TankTrack.generated.h"
 
+class UPrimitiveComponent;
 /**
  * TankTrack is used to set maxinum driving force, and to apply forces to the tank.
  */

@@ -28,7 +28,7 @@ EFiringStatus UTankAimingComponent::GetFiringState() const
 {
 	return FiringState;
 }
-int	 UTankAimingComponent::GetNumberOfAmmo() const
+int32 UTankAimingComponent::GetNumberOfAmmo() const
 {
 	return NumberOfAmmo;
 }

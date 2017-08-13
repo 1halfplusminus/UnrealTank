@@ -35,7 +35,7 @@ public:
 	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
 	EFiringStatus GetFiringState() const;
-	int	GetNumberOfAmmo() const;
+	int32	GetNumberOfAmmo() const;
 protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
@@ -49,14 +49,14 @@ protected:
 	float ReloadTimeInSeconds = 3.0f;
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<AProjectile> ProjectileBlueprint; // alternative
-	float LastFireTime = 0.0f;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 StartAmmo = 3;
 	UPROPERTY(BlueprintReadOnly)
 	EFiringStatus FiringState = EFiringStatus::Reloading;
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int StartAmmo = 3;
 	UPROPERTY(BlueprintReadOnly)
-	int NumberOfAmmo = 0;
+	int32 NumberOfAmmo = 0;
 
+	float LastFireTime = 0.0f;
 	FVector AimDirection = FVector(0);
 private:
 	bool IsBarrelMoving();

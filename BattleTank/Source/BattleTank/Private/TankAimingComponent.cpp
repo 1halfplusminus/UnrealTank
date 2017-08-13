@@ -14,7 +14,11 @@ UTankAimingComponent::UTankAimingComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 }
-
+void UTankAimingComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	NumberOfAmmo = StartAmmo;
+}
 void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
 	Barrel = BarrelToSet;
@@ -89,7 +93,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	// Move the barrel the right amount this frame
 	// Given a max elevation speed, and the frame time
 	Barrel->Elevate(DeltaRotator.Pitch);
-	if (DeltaRotator.Yaw < 100)
+	if (FMath::Abs(DeltaRotator.Yaw) <= 100)
 	{
 		Turret->Rotate(DeltaRotator.Yaw);
 	}

@@ -52,10 +52,13 @@ protected:
 	float LastFireTime = 0.0f;
 	UPROPERTY(BlueprintReadOnly)
 	EFiringStatus FiringState = EFiringStatus::Reloading;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int StartAmmo = 3;
 	UPROPERTY(BlueprintReadOnly)
-	int NumberOfAmmo = 3;
+	int NumberOfAmmo = 0;
 
 	FVector AimDirection = FVector(0);
 private:
 	bool IsBarrelMoving();
+	void virtual BeginPlay() override;
 };

@@ -5,6 +5,9 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/DamageType.h"
+#include "GameFramework/Actor.h"
 // Sets default values
 AProjectile::AProjectile()
 {
@@ -37,6 +40,7 @@ void AProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	ImpactBlast->OnParticleDeath.AddDynamic(this, &AProjectile::OnBlastEnd);
 }
 
 // Called every frame
@@ -54,9 +58,21 @@ void AProjectile::Launch(float Speed)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp,Warning,TEXT("HMM HMHMHM MHMHMH "))
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
 	ExplosionForce->FireImpulse();
 	CollisionMesh->SetVisibility(false);
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		Damage,
+		GetActorLocation(),
+		ExplosionForce->Radius,
+		UDamageType::StaticClass(),
+		TArray<AActor*>() // damage all actors
+	);
+}
+
+void AProjectile::OnBlastEnd(FName EventName, float EmitterTime, int32 ParticleTime, FVector Location, FVector Velocity, FVector Direction)
+{
+	Destroy();
 }

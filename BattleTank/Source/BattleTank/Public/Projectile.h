@@ -36,8 +36,12 @@ private:
 	UParticleSystemComponent* ImpactBlast = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* CollisionMesh = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float Damage = 20.0f;
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit);
+	UFUNCTION()
+	void OnBlastEnd(FName EventName, float EmitterTime, int32 ParticleTime, FVector Location, FVector Velocity, FVector Direction);
 	UPROPERTY(VisibleAnywhere,Category="Components")
 	URadialForceComponent* ExplosionForce = nullptr;
 };

@@ -9,6 +9,7 @@ class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UParticleSystemComponent;
 class UPrimitiveComponent;
+class URadialForceComponent;
 UCLASS()
 class BATTLETANK_API AProjectile : public AActor
 {
@@ -29,12 +30,14 @@ public:
 	void Launch(float Speed);
 private:
 	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UParticleSystemComponent* LaunchBlast = nullptr;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UParticleSystemComponent* ImpactBlast = nullptr;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* CollisionMesh = nullptr;
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit);
+	UPROPERTY(VisibleAnywhere,Category="Components")
+	URadialForceComponent* ExplosionForce = nullptr;
 };

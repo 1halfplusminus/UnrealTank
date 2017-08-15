@@ -7,6 +7,8 @@
 #include  "TankBarrel.h"
 #include  "TankTurret.h"
 #include  "Projectile.h"
+#include  "Kismet/KismetMathLibrary.h"
+
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
@@ -86,20 +88,12 @@ void UTankAimingComponent::AimAt(FVector WorldSpaceAim)
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
-	// Work-out difference between current barrel rotation , and AimDirection
+
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
-	// Move the barrel the right amount this frame
-	// Given a max elevation speed, and the frame time
 	Barrel->Elevate(DeltaRotator.Pitch);
-	if (FMath::Abs(DeltaRotator.Yaw) <= 100)
-	{
-		Turret->Rotate(DeltaRotator.Yaw);
-	}
-	else {
-		Turret->Rotate(-DeltaRotator.Yaw);
-	}
+	Turret->Rotate(FMath::FindDeltaAngleDegrees( BarrelRotator.Yaw, AimAsRotator.Yaw));
 }
 
 void UTankAimingComponent::Fire()

@@ -5,6 +5,8 @@
 #include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 
+//TODO fix clamsy mouvement
+
 UTankTrack::UTankTrack()
 {
 	

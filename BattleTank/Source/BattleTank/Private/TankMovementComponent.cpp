@@ -3,6 +3,7 @@
 #include "TankMovementComponent.h"
 #include "TankTrack.h"
 
+//TODO fix clamsy mouvement
 
 void UTankMovementComponent::Initialise(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {

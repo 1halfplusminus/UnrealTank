@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
 #include "Components/SceneComponent.h"
+#include "Tank.h" // So we can impliment OnDeath
 
 void ATankPlayerController::BeginPlay()
 {
@@ -14,6 +15,22 @@ void ATankPlayerController::BeginPlay()
 	{
 		FoundAimingComponent(AimingComponent);
 	}
+}
+
+void ATankPlayerController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (InPawn)
+	{
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return;  }
+
+		PossessedTank->OnDeath.AddUniqueDynamic(this,&ATankPlayerController::OnPossedTankDeath);
+	}
+}
+
+void ATankPlayerController::OnPossedTankDeath()
+{
 }
 
 void ATankPlayerController::Tick(float DeltaTime)

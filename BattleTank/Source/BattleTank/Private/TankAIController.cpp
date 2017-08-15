@@ -5,10 +5,27 @@
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "TankAimingComponent.h"
+#include "Tank.h"
 
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+}
+void ATankAIController::SetPawn(APawn* InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (InPawn)
+	{
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return; }
+
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossedTankDeath);
+	}
+}
+void ATankAIController::OnPossedTankDeath()
+{
+
 }
 void ATankAIController::Tick(float DeltaTime)
 {

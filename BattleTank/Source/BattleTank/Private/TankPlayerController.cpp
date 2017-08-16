@@ -10,7 +10,7 @@
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (ensure(AimingComponent))
 	{
 		FoundAimingComponent(AimingComponent);
@@ -22,8 +22,8 @@ void ATankPlayerController::SetPawn(APawn* InPawn)
 	Super::SetPawn(InPawn);
 	if (InPawn)
 	{
-		auto PossessedTank = Cast<ATank>(InPawn);
-		if (!ensure(PossessedTank)) { return;  }
+		ATank* PossessedTank = Cast<ATank>(InPawn);
+		if (!PossessedTank) { return;  }
 
 		PossessedTank->OnDeath.AddUniqueDynamic(this,&ATankPlayerController::OnPossedTankDeath);
 	}
@@ -31,6 +31,7 @@ void ATankPlayerController::SetPawn(APawn* InPawn)
 
 void ATankPlayerController::OnPossedTankDeath()
 {
+	StartSpectatingOnly();
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -40,8 +41,8 @@ void ATankPlayerController::Tick(float DeltaTime)
 }
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	auto ControlledTank = GetPawn();
-	if (!ensure(ControlledTank)) { return; }
+	APawn* ControlledTank = GetPawn();
+	if (!ControlledTank) { return; }
 	FVector HitLocation; //Out parameter
 	 // Get world location of linetrace through crosshair
 	 // If it hits the landscape
@@ -63,7 +64,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 	// Find the crosshair position in pixel coordinates
 	int32 ViewportSizeX, ViewportSizeY;
 	GetViewportSize(ViewportSizeX, ViewportSizeY);
-	auto ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
+	FVector2D ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
 
 	// "De-project" the screen position of the crosshair to a world direction
 	FVector LookDirection;
@@ -78,8 +79,8 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
 {
 	FHitResult HitResult;
-	auto StartLocation = PlayerCameraManager->GetCameraLocation();
-	auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
+	FVector StartLocation = PlayerCameraManager->GetCameraLocation();
+	FVector EndLocation = StartLocation + (LookDirection * LineTraceRange);
 	if (GetWorld()->LineTraceSingleByChannel(
 		HitResult,
 		StartLocation,

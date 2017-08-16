@@ -24,8 +24,9 @@ public:
 	float GetHealthPercent() const;
 	FTankDeathDelegate OnDeath;
 private:
+	virtual void BeginPlay() override;
 	UPROPERTY(EditDefaultsOnly,Category="Setup")
 	int32 StartingHealth = 100;
 	UPROPERTY(VisibleAnywhere)
-	int32 CurrentHealth = StartingHealth;
+	int32 CurrentHealth = 0;
 };
